@@ -40,9 +40,11 @@ def reset():
             blasters[side].append(blaster)
 
     for side in arsenal["blasters"].keys():
-        for accessory in arsenal['magazines']:
+        for acc_id, accessory in enumerate(arsenal['magazines']):
             accessory['available'] = accessory['max_available']
+            accessory['id'] = acc_id
             accessories[side].append(accessory)
+            
 
 
 class User(UserMixin):
