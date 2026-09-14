@@ -45,6 +45,9 @@ def reset():
             accessory['id'] = acc_id
             accessories[side].append(accessory)
 
+    for user in users:  # todo - test this
+        user.reset()
+
 
 
 class User(UserMixin):
@@ -53,6 +56,9 @@ class User(UserMixin):
         self.points = DEFAULT_POINTS
         self.inventory = []
 
+    def reset(self):
+        self.inventory = []
+        self.points = DEFAULT_POINTS
 
 @login_manager.user_loader
 def load_user(user_id):
