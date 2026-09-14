@@ -204,7 +204,10 @@ def accessories(side):
 @app.route("/arsenal/<string:side>/acquire_accessory")
 @login_required
 def acquire_accessory(side):
-    accessory_id = request.args.get('id')
+    accessory_id = int(request.args.get('id', -1))
+
+    if accessory_id == -1:
+        return {"error", "No ID!"}
 
     if side not in ("breach", "bunker"):
         return {"error": "Invalid side. Must be 'breach' or 'bunker'"}, 400
@@ -229,6 +232,71 @@ def acquire_accessory(side):
 
         else:
             return {"success": False, "error": "Not enough points!"}
+
+
+
+@app.route("/arsenal/<string:side>/remove_accessory")
+@login_required
+def remove_accessory(side):
+    accessory_id = int(request.args.get('id', -1))
+
+    if accessory_id == -1:
+        return {"error", "No ID!"}
+
+    if side not in ("breach", "bunker"):
+        return {"error": "Invalid side. Must be 'breach' or 'bunker'"}, 400
+
+    for item in current_user.inventory:
+        if item['name'] == accessory_id:
+            for accessory in accessories[side]:
+                if accessory["id"] == accessory_id:
+                    accessory["available"] += 1
+
+                    current_user.inventory.remove(item)
+                    current_user.points += item['cost']
+
+                    return {"success": True}
+
+            return {"success": False, "error": "Failed to find item in arsenal!"}
+    return {"success": False, "error": "Item not in inventory"}
+
+@app.route("/arsenal/<string:side>/remove_inventory")
+@login_required
+def remove(side):
+    index = int(request.args.get('index', -1))
+
+    if index == -1:
+        return {"error", "No Index"}, 400
+
+    if side not in ("breach", "bunker"):
+        return {"error": "Invalid side. Must be 'breach' or 'bunker'"}, 400
+
+    if len(current_user.inventory) > index >= 0:
+        return {"error": "Invalid Index"}
+
+    item = current_user.inventory.pop(index)
+
+    current_user.points += item['cost']
+
+    if item['type'] == 'blaster':
+        for blaster in blasters[side]:
+            if blaster['name'] == item['name']:
+                blaster['available'] += 1
+                return {"success": True}
+
+        return {"success": False}
+
+    elif item['type'] == 'accessory':
+        for accessory in accessories[side]:
+            if accessory['name'] == item['name']:
+                accessory['available'] += 1
+                return {"success": True}
+
+        return {"success": False}
+
+    else:
+        print("HOLY ITS FUCKED")
+        return {"success": False}
 
 
 @app.route("/unsafe_reset")

@@ -81,6 +81,15 @@
         "max_available": 1
       },
       {
+        "name": "Mini-Gun",
+        "cost": 10,
+        "ammo": {
+          "type": "belt",
+          "display": "Chain (No Darts)"
+        },
+        "max_available": 1
+      },
+      {
         "name": "Sling-fire",
         "cost": 5,
         "ammo": {
