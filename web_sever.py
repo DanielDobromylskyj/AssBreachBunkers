@@ -137,7 +137,7 @@ def acquire_blaster(side):
 
     for blaster in blasters[side]:
         if blaster["name"] == blaster_name:
-            if blaster["available"] > 1 and current_user.points - blaster['cost'] > 0:
+            if blaster["available"] > 1 and current_user.points - blaster['cost'] >= 0:
                 blaster["available"] -= 1
                 current_user.points -= blaster['cost']
 
@@ -214,7 +214,7 @@ def acquire_accessory(side):
 
     accessory = accessories[side][accessory_id]
 
-    if accessory['available'] > 0 and current_user.points - accessory['cost'] > 0:
+    if accessory['available'] > 0 and current_user.points - accessory['cost'] >= 0:
         accessory['available'] -= 1
         current_user.points -= accessory['cost']
 
