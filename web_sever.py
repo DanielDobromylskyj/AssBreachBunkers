@@ -97,7 +97,7 @@ def inventory():
 @login_required
 def get_arsenal(side):
     if side not in ("breach", "bunker"):
-        return {"error": "Invalid side. Must be 'breach' or 'bunker'"}
+        return {"error": "Invalid side. Must be 'breach' or 'bunker'"}, 400
 
     return blasters[side]
 
@@ -107,7 +107,7 @@ def acquire_blaster(side):
     blaster_name = request.args.get('name')
 
     if side not in ("breach", "bunker"):
-        return {"error": "Invalid side. Must be 'breach' or 'bunker'"}
+        return {"error": "Invalid side. Must be 'breach' or 'bunker'"}, 400
 
     for blaster in blasters[side]:
         if blaster["name"] == blaster_name:
@@ -133,7 +133,27 @@ def acquire_blaster(side):
     return {"error": "No blaster with that name was found", "success": False}
 
 
+@app.route("/arsenal/<string:side>/remove_blaster")
+@login_required
+def remove_blaster(side):
+    blaster_name = request.args.get('name')
 
+    if side not in ("breach", "bunker"):
+        return {"error": "Invalid side. Must be 'breach' or 'bunker'"}, 400
+
+    for item in current_user.inventory:
+        if item['name'] == blaster_name:
+            for blaster in blasters[side]:
+                if blaster["name"] == blaster_name:
+                    blaster["available"] += 1
+
+                    current_user.inventory.remove(item)
+                    current_user.points += item['cost']
+
+                    return {"success": True}
+
+            return {"success": False, "error": "Failed to find blaster in arsenal!"}
+    return {"success": False, "error": "Item not in inventory"}
 
 # Everything under /public/* is intentionally unauthenticated.
 @app.route("/public/<path:path>")
