@@ -190,6 +190,7 @@ def remove_blaster(side):
 @app.route("/unsafe_reset")
 def unsafe_reset():
     reset()
+    return "Reset Complete!"
 
 
 # Everything under /public/* is intentionally unauthenticated.
