@@ -1,11 +1,36 @@
 <!DOCTYPE html>
-    <html lang="en">
+    <html lang="en" id="html">
         <head>
             <meta charset="UTF-8">
             <title>Breachers Vs Bunkerers</title>
+            <link rel="stylesheet" href="/public/css/dashboard.css">
         </head>
         <body>
-
+        <div class="outerbox">
+            <div class="underline">
+                <h2 class="inv">Inventory</h2>
+                <h2 class="remain">Points Remaining: </h2>
+                <h2 class="points">10</h2>
+            </div>
+            <div id="inv" class="scrollbox">
+                <section class="invLine">
+                    <p></p>
+                    <p></p>
+                    <p></p>
+                    <p><button>Remove</button></p>
+                </section>
+            </div>
+        </div>
+        <div class="outerbox">
+            <div class="underline">
+                <h2 class="inv">Arsenal</h2>
+            </div>
+            <div id="ars">
+                <section class="arsLine">
+                    <p>Info goes here</p>
+                </section>
+            </div>
+        </div>
         </body>
         <script src="/public/script/dashboard.js"></script>
     </html>

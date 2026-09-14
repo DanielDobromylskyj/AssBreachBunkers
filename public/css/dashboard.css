@@ -1,0 +1,47 @@
+.bunker {
+    background-color: purple;
+}
+.breach {
+    background-color: blue;
+}
+
+html, body {
+    margin: 0;
+    height: 100%;
+}
+
+.outerbox {
+    display: grid;
+    float: left;
+    overflow-y: auto;
+    width: 100%;
+    height: 50%;
+}
+
+h2 {
+    font-size: 250%;
+    color: white;
+}
+
+.inv {
+    grid-column: 2
+}
+.remain {
+    grid-column: 6
+}
+.points {
+    grid-column: 7
+}
+
+.underline {
+    display: grid;
+    height: 20%;
+    border-bottom: 10px solid white;
+    border-top: 10px solid white;
+}
+
+.invLine {
+    text-align: center;
+    font-size: 250%;
+
+}
