@@ -8,12 +8,12 @@ const arsDiv = document.getElementById('ars');
 function createInvLine(name, dart, cost, id){
 
     invDiv.innerHTML +=
-        ```<section class="invLine">
+        `<section class="invLine">
                 <p>name: ${name}</p>
                 <p>Dart Type: ${dart}</p>
                 <p>Cost: ${cost}</p>
                 <p><button onclick="RemoveInv(${id})">Remove</button></p>
-            </section>```
+            </section>`
 }
 
 function populateArsenal(){
@@ -23,16 +23,38 @@ function populateArsenal(){
       .then(data => {
         arsDiv.innerHTML = "";
         data.forEach(blaster =>{
-            arsDiv.innerHTML = arsDiv.innerHTML + ```
+            arsDiv.innerHTML = arsDiv.innerHTML + `
                         <section class="arsLine">
                             <p>name: ${blaster.name}</p>
                             <p>Dart Type: ${blaster.ammo.display}</p>
                             <p>Cost: ${blaster.cost}</p>
-                            <p><button>Equip</button></p>
-                        </section>```
+                            <p><button onclick="Equip('${blaster.name}')">Equip</button></p>
+                        </section>`
         })
       })
 
 }
 
-populateArsenal();
+function Equip(name){
+    fetch(`/arsenal/${team}/acquire_blaster?name=${name}`)
+          .then(res => res.json())
+                .then(data => {
+                  console.log(data);
+                })
+
+    reload()
+
+}
+
+function reload(){
+    populateArsenal();
+
+    fetch(`/points_available`)
+                  .then(res => res.json())
+                        .then(data => {
+                          document.getElementById('points').innerText = data.points;
+                        })
+}
+
+reload()
+
