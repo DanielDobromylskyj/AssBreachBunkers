@@ -37,6 +37,7 @@ class User(UserMixin):
     def __init__(self, username):
         self.id = username
         self.points = DEFAULT_POINTS
+        self.inventory = []
 
 
 @login_manager.user_loader
@@ -86,6 +87,11 @@ def dashboard():
 def points_available():
     return {"points": current_user.points}
 
+@app.route("/inventory")
+@login_required
+def inventory():
+    return current_user.inventory
+
 # Arsenal API
 @app.route("/arsenal/<string:side>/blasters")
 @login_required
@@ -94,6 +100,38 @@ def get_arsenal(side):
         return {"error": "Invalid side. Must be 'breach' or 'bunker'"}
 
     return blasters[side]
+
+@app.route("/arsenal/<string:side>/acquire_blaster")
+@login_required
+def acquire_blaster(side):
+    blaster_name = request.args.get('name')
+
+    if side not in ("breach", "bunker"):
+        return {"error": "Invalid side. Must be 'breach' or 'bunker'"}
+
+    for blaster in blasters[side]:
+        if blaster["name"] == blaster_name:
+            if blaster["available"] > 1 and current_user.points - blaster['cost'] > 0:
+                blaster["available"] -= 1
+                current_user.points -= blaster['cost']
+
+                current_user.inventory.append({
+                    "type": "blaster",
+                    "name": blaster_name,
+                    "cost": blaster['cost']
+                })
+
+                return {"success": True}
+
+            else:
+                if blaster["available"] > 1:
+                    return {"success": False, "error": "All blasters in use"}
+
+                else:
+                    return {"success": False, "error": "Not enough points"}
+
+    return {"error": "No blaster with that name was found", "success": False}
+
 
 
 
