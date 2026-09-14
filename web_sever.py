@@ -111,12 +111,12 @@ def dashboard():
 @app.route("/points_available")
 @login_required
 def points_available():
-    return {"points": current_user.points}
+    return {"points": users[current_user.id].points}
 
 @app.route("/inventory")
 @login_required
 def inventory():
-    return current_user.inventory
+    return users[current_user.id].inventory
 
 # Arsenal API
 @app.route("/arsenal/<string:side>/blasters")
@@ -130,6 +130,7 @@ def get_arsenal(side):
 @app.route("/arsenal/<string:side>/acquire_blaster")
 @login_required
 def acquire_blaster(side):
+    global blasters
     blaster_name = request.args.get('name')
 
     if side not in ("breach", "bunker"):
@@ -137,11 +138,11 @@ def acquire_blaster(side):
 
     for blaster in blasters[side]:
         if blaster["name"] == blaster_name:
-            if blaster["available"] > 0 and (users[current_user].points - blaster['cost']) >= 0:
+            if blaster["available"] > 0 and (users[current_user.id].points - blaster['cost']) >= 0:
                 blaster["available"] -= 1
-                users[current_user].points -= blaster['cost']
+                users[current_user.id].points -= blaster['cost']
 
-                users[current_user].inventory.append({
+                users[current_user.id].inventory.append({
                     "type": "blaster",
                     "name": blaster_name,
                     "cost": blaster['cost']
@@ -150,7 +151,7 @@ def acquire_blaster(side):
                 return {"success": True}
 
             else:
-                if blaster["available"] > 0:
+                if blaster["available"] == 0:
                     return {"success": False, "error": "All blasters in use"}
 
                 else:
@@ -167,14 +168,14 @@ def remove_blaster(side):
     if side not in ("breach", "bunker"):
         return {"error": "Invalid side. Must be 'breach' or 'bunker'"}, 400
 
-    for item in current_user.inventory:
+    for item in users[current_user.id].inventory:
         if item['name'] == blaster_name:
             for blaster in blasters[side]:
                 if blaster["name"] == blaster_name:
                     blaster["available"] += 1
 
-                    current_user.inventory.remove(item)
-                    current_user.points += item['cost']
+                    users[current_user.id].inventory.remove(item)
+                    users[current_user.id].points += item['cost']
 
                     return {"success": True}
 
@@ -214,11 +215,11 @@ def acquire_accessory(side):
 
     accessory = accessories[side][accessory_id]
 
-    if accessory['available'] > 0 and (current_user.points - accessory['cost']) >= 0:
+    if accessory['available'] > 0 and (users[current_user.id].points - accessory['cost']) >= 0:
         accessory['available'] -= 1
-        current_user.points -= accessory['cost']
+        users[current_user.id].points -= accessory['cost']
 
-        current_user.inventory.append({
+        users[current_user.id].inventory.append({
                     "type": "accessory",
                     "name": accessory_id,
                     "cost": accessory['cost']
@@ -227,7 +228,7 @@ def acquire_accessory(side):
         return {"success": True}
 
     else:
-        if accessory['available'] > 0:
+        if accessory['available'] == 0:
             return {"success": False, "error": "Out of Stock!"}
 
         else:
@@ -246,14 +247,14 @@ def remove_accessory(side):
     if side not in ("breach", "bunker"):
         return {"error": "Invalid side. Must be 'breach' or 'bunker'"}, 400
 
-    for item in current_user.inventory:
+    for item in users[current_user.id].inventory:
         if item['name'] == accessory_id:
             for accessory in accessories[side]:
                 if accessory["id"] == accessory_id:
                     accessory["available"] += 1
 
-                    current_user.inventory.remove(item)
-                    current_user.points += item['cost']
+                    users[current_user.id].inventory.remove(item)
+                    users[current_user.id].points += item['cost']
 
                     return {"success": True}
 
@@ -271,12 +272,12 @@ def remove(side):
     if side not in ("breach", "bunker"):
         return {"error": "Invalid side. Must be 'breach' or 'bunker'"}, 400
 
-    if len(current_user.inventory) > index >= 0:
+    if len(users[current_user.id].inventory) > index >= 0:
         return {"error": "Invalid Index"}
 
-    item = current_user.inventory.pop(index)
+    item = users[current_user.id].inventory.pop(index)
 
-    current_user.points += item['cost']
+    users[current_user.id].points += item['cost']
 
     if item['type'] == 'blaster':
         for blaster in blasters[side]:
