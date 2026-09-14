@@ -1,0 +1,42 @@
+html {
+    background-color: pink;
+}
+
+#heading {
+    display: flexbox;
+    text-align: center;
+}
+
+h1 {
+    display: inline;
+}
+
+#bunk {
+    color: purple;
+}
+
+#brch {
+    color: blue;
+}
+
+#buttons{
+    display: flexbox;
+    text-align: center;
+    padding: 20%
+
+}
+button{
+    color: white;
+    padding: 20%;
+    border: 2px solid black;
+    border-radius: 20%;
+    font-size: 120%;
+}
+
+.bunker{
+    background-color: purple;
+}
+
+.breach{
+    background-color: blue;
+}
