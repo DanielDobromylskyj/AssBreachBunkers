@@ -20,10 +20,9 @@ function RemoveInv(id){
     fetch(`/arsenal/${team}/remove_inventory?index=${id}`)
               .then(res => res.json())
                     .then(data => {
+                      reload();
                       console.log(data);
                     })
-
-    reload();
 }
 
 function populateArsenal(){
@@ -49,11 +48,9 @@ function Equip(name){
     fetch(`/arsenal/${team}/acquire_blaster?name=${name}`)
           .then(res => res.json())
                 .then(data => {
+                  reload()
                   console.log(data);
                 })
-
-    reload()
-
 }
 
 function reload(){
