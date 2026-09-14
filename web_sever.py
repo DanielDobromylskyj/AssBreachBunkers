@@ -13,11 +13,17 @@ users = {}  # Pure skill, We don't need no DB for logins
 global blasters
 blasters = {}
 
+global accessories
+accessories = {}
+
 DEFAULT_POINTS = 10
 
 def reset():
     global blasters
     blasters = {}
+
+    global accessories
+    accessories = {}
 
     with open("private/arsenal.json", "r") as f:
         arsenal = json.load(f)
@@ -27,10 +33,16 @@ def reset():
             raise LookupError("Why tf does that already exist?!?!")
 
         blasters[side] = []
+        accessories[side] = []
 
         for blaster in arsenal["blasters"][side]:
             blaster["available"] = blaster['max_available']
             blasters[side].append(blaster)
+
+    for side in arsenal["blasters"].keys():
+        for accessory in arsenal['magazines']:
+            accessory['available'] = accessory['max_available']
+            accessories[side].append(accessory)
 
 
 class User(UserMixin):
@@ -100,6 +112,24 @@ def get_arsenal(side):
         return {"error": "Invalid side. Must be 'breach' or 'bunker'"}, 400
 
     return blasters[side]
+
+
+@app.route("/arsenal/<string:side>/accessories")
+@login_required
+def accessories(side):
+    blaster_name = request.args.get('name')
+
+    if side not in ("breach", "bunker"):
+        return {"error": "Invalid side. Must be 'breach' or 'bunker'"}, 400
+
+    found = []
+    for blaster in blasters[side]:
+        if blaster["name"] == blaster_name:
+            for accessory in accessories[side]:
+                if accessory['type'] == blaster["type"]:
+                    found.append(accessory)
+
+    return {"results": found}
 
 @app.route("/arsenal/<string:side>/acquire_blaster")
 @login_required
