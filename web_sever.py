@@ -121,24 +121,6 @@ def get_arsenal(side):
 
     return blasters[side]
 
-
-@app.route("/arsenal/<string:side>/accessories")
-@login_required
-def accessories(side):
-    blaster_name = request.args.get('name')
-
-    if side not in ("breach", "bunker"):
-        return {"error": "Invalid side. Must be 'breach' or 'bunker'"}, 400
-
-    found = []
-    for blaster in blasters[side]:
-        if blaster["name"] == blaster_name:
-            for accessory in accessories[side]:
-                if accessory['type'] == blaster["type"]:
-                    found.append(accessory)
-
-    return {"results": found}
-
 @app.route("/arsenal/<string:side>/acquire_blaster")
 @login_required
 def acquire_blaster(side):
@@ -192,6 +174,56 @@ def remove_blaster(side):
 
             return {"success": False, "error": "Failed to find blaster in arsenal!"}
     return {"success": False, "error": "Item not in inventory"}
+
+
+
+@app.route("/arsenal/<string:side>/accessories")
+@login_required
+def accessories(side):
+    blaster_name = request.args.get('name')
+
+    if side not in ("breach", "bunker"):
+        return {"error": "Invalid side. Must be 'breach' or 'bunker'"}, 400
+
+    found = []
+    for blaster in blasters[side]:
+        if blaster["name"] == blaster_name:
+            for accessory in accessories[side]:
+                if accessory['type'] == blaster["type"]:
+                    found.append(accessory)
+
+    return {"results": found}
+
+
+@app.route("/arsenal/<string:side>/acquire_accessory")
+@login_required
+def acquire_accessory(side):
+    accessory_id = request.args.get('id')
+
+    if side not in ("breach", "bunker"):
+        return {"error": "Invalid side. Must be 'breach' or 'bunker'"}, 400
+
+    accessory = accessories[side][accessory_id]
+
+    if accessory['available'] > 0 and current_user.points - accessory['cost'] > 0:
+        accessory['available'] -= 1
+        current_user.points -= accessory['cost']
+
+        current_user.inventory.append({
+                    "type": "accessory",
+                    "name": accessory_id,
+                    "cost": accessory['cost']
+                })
+
+        return {"success": True}
+
+    else:
+        if accessory['available'] > 0:
+            return {"success": False, "error": "Out of Stock!"}
+
+        else:
+            return {"success": False, "error": "Not enough points!"}
+
 
 @app.route("/unsafe_reset")
 def unsafe_reset():
