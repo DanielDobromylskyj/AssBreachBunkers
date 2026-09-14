@@ -137,11 +137,11 @@ def acquire_blaster(side):
 
     for blaster in blasters[side]:
         if blaster["name"] == blaster_name:
-            if blaster["available"] > 0 and (current_user.points - blaster['cost']) >= 0:
+            if blaster["available"] > 0 and (users[current_user].points - blaster['cost']) >= 0:
                 blaster["available"] -= 1
-                current_user.points -= blaster['cost']
+                users[current_user].points -= blaster['cost']
 
-                current_user.inventory.append({
+                users[current_user].inventory.append({
                     "type": "blaster",
                     "name": blaster_name,
                     "cost": blaster['cost']
