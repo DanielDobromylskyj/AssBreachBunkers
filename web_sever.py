@@ -87,7 +87,7 @@ def points_available():
     return {"points": current_user.points}
 
 # Arsenal API
-@app.route("/arsenal/<string:side>")
+@app.route("/arsenal/<string:side>/blasters")
 @login_required
 def get_arsenal(side):
     if side not in ("breach", "bunker"):
