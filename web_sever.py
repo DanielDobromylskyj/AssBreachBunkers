@@ -98,7 +98,7 @@ def landing():
 @app.route("/team_select")
 @login_required
 def team_select():
-    return send_file("public/html/teamChoice.html.html", "text/html")
+    return send_file("public/html/teamChoice.html", "text/html")
 
 
 @app.route("/dashboard")
