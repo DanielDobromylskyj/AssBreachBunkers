@@ -80,7 +80,7 @@ def login():
         users.setdefault(username, User(username))
         login_user(users[username])
 
-        return redirect(url_for("dashboard"))
+        return redirect(url_for("team_select"))
 
     return send_file("public/html/login.html", "text/html")
 
@@ -94,6 +94,12 @@ def logout():
 @app.route("/")
 def landing():
     return send_file("public/html/index.html", "text/html")
+
+@app.route("/team_select")
+@login_required
+def team_select():
+    return send_file("public/html/teamChoice.html.html", "text/html")
+
 
 @app.route("/dashboard")
 @login_required
