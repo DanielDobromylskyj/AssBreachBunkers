@@ -272,7 +272,7 @@ def remove(side):
     if side not in ("breach", "bunker"):
         return {"error": "Invalid side. Must be 'breach' or 'bunker'"}, 400
 
-    if len(users[current_user.id].inventory) > index >= 0:
+    if not (len(users[current_user.id].inventory) > index >= 0):
         return {"error": "Invalid Index"}
 
     item = users[current_user.id].inventory.pop(index)
