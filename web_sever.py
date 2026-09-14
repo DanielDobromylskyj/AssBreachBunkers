@@ -79,6 +79,14 @@ def landing():
 def dashboard():
     return send_file("public/html/dashboard.html", "text/html")
 
+# User API
+
+@app.route("/points_available")
+@login_required
+def points_available():
+    return {"points": current_user.points}
+
+# Arsenal API
 @app.route("/arsenal/<string:side>")
 @login_required
 def get_arsenal(side):
