@@ -44,7 +44,7 @@ def reset():
             accessory['available'] = accessory['max_available']
             accessory['id'] = acc_id
             accessories[side].append(accessory)
-            
+
 
 
 class User(UserMixin):
@@ -186,6 +186,11 @@ def remove_blaster(side):
 
             return {"success": False, "error": "Failed to find blaster in arsenal!"}
     return {"success": False, "error": "Item not in inventory"}
+
+@app.route("/unsafe_reset")
+def unsafe_reset():
+    reset()
+
 
 # Everything under /public/* is intentionally unauthenticated.
 @app.route("/public/<path:path>")
