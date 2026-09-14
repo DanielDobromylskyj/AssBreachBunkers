@@ -9,9 +9,13 @@ login_manager.login_view = "login"
 
 users = {}  # Pure skill, We don't need no DB for logins
 
+DEFAULT_POINTS = 10
+
 class User(UserMixin):
     def __init__(self, username):
         self.id = username
+        self.points = DEFAULT_POINTS
+
 
 @login_manager.user_loader
 def load_user(user_id):

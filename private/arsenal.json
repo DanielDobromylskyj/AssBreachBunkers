@@ -1,0 +1,63 @@
+{
+  "blasters": {
+    "breach": [
+      {
+        "name": "Trilogy",
+        "cost": 6,
+        "ammo": {
+          "type": "cartridge",
+          "display": "1x Cartridge (Full)"
+        },
+        "max_available": 1
+      },
+      {
+        "name": "SMG",
+        "cost": 8,
+        "ammo": {
+          "type": "dart",
+          "display": "10x Mag (Full)"
+        },
+        "max_available": 2
+      },
+      {
+        "name": "Rampage",
+        "cost": 7,
+        "ammo": {
+          "type": "dart",
+          "display": "12x Mag (Full)"
+        },
+        "max_available": 1
+      },
+      {
+        "name": "Strong Arm",
+        "cost": 4,
+        "ammo": {
+          "type": "dart",
+          "display": "6x Darts"
+        },
+        "max_available": 4
+      }
+    ],
+    "bunker": [
+      {
+        "name": "Centurion",
+        "cost": 10,
+        "ammo": {
+          "type": "mega",
+          "display": "10x Mag (Full)"
+        },
+        "max_available": 1
+      },
+      {
+        "name": "Sling-fire",
+        "cost": 5,
+        "ammo": {
+          "type": "dart",
+          "display": "6x Mag (Full)"
+        },
+        "max_available": 3
+      }
+    ]
+  }
+}
+
