@@ -46,7 +46,7 @@ def reset():
             accessories[side].append(accessory)
 
     for user in users:  # todo - test this
-        user.reset()
+        users[user].reset()
 
 
 
