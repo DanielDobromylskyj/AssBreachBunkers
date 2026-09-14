@@ -16,6 +16,16 @@ function createInvLine(name, dart, cost, id){
             </section>`
 }
 
+function RemoveInv(id){
+    fetch(`/arsenal/${team}/remove_inventory?index=${id}`)
+              .then(res => res.json())
+                    .then(data => {
+                      console.log(data);
+                    })
+
+    reload();
+}
+
 function populateArsenal(){
 
     fetch(`/arsenal/${team}/blasters`)
@@ -54,6 +64,17 @@ function reload(){
                         .then(data => {
                           document.getElementById('points').innerText = data.points;
                         })
+
+    fetch(`/inventory`)
+          .then(res => res.json())
+          .then(data => {
+            invDiv.innerHTML = "";
+            let i = 0
+            data.forEach(blaster =>{
+                createInvLine(blaster.name, null, blaster.cost, i)
+                i++;
+            })
+          })
 }
 
 reload()
